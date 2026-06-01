@@ -125,11 +125,18 @@ public class PoligonosApp extends Application {
     ///
     /// @return uma lista de String indicando se o polígono é um "quadrilátero" (quadrado ou retângulo),
     /// "triângulo", "pentágono", "hexágono" ou apenas um "polígono" geral quando tiver mais de 6 lados.
-    protected List<String> tipoPoligonos(){
-        // TODO Apague esta linha e a próxima e implemente seu código
-        return List.of();
-    }
-
+    protected List<String> tipoPoligonos() {
+    return pontosPoligonos.stream()
+            .flatMap(pontos -> List.of(pontos.size()).stream())
+            .map(qtd -> switch (qtd) {
+                case 3 -> "Triângulo";
+                case 4 -> "Quadrilátero";
+                case 5 -> "Pentágono";
+                case 6 -> "Hexágono";
+                default -> "Polígono";
+            })
+            .toList();
+}
     /// Calcula o perímetro de cada polígono.
     /// O perímetro é a soma da distância entre cada [Point] (x,y) do [Polygon].
     /// Se você pensar em um polígono como um quadrado, o perímetro representa a distância que você percorreria
@@ -166,9 +173,18 @@ public class PoligonosApp extends Application {
     /// Desta forma, basta retornar este resultado como uma nova lista de [Double].
     ///
     /// @return uma lista contendo o perímetro de cada polígono
-    protected List<Double> perimetros(){
-        // TODO Apague esta linha e a próxima e implemente seu código
-        return List.of();
+    protected List<Double> perimetros() {
+    return pontosPoligonos.stream()
+            .flatMap(pontos -> {
+                Point acumulado = pontos.stream()
+                        .reduce(
+                                new Point(pontos.getLast(), pontos.getFirst()),
+                                Point::new
+                        );
+
+                return List.of(acumulado.distance()).stream();
+            })
+            .toList();
     }
 }
 
